@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import Counter from './Counter';
-import logo from './logo.svg';
+import StravaAuth from './StravaAuth';
 import './App.css';
 
+
+// TODO: convert to function, read and parse url query from strava
 class App extends Component {
   render() {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <StravaAuth />
           <p>
             Edit <code>src/App.js</code> and save to reload.
           </p>
@@ -21,7 +22,6 @@ class App extends Component {
             Learn React
           </a>
         </header>
-        <Counter />
       </div>
     );
   }
