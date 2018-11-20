@@ -25,12 +25,14 @@ const exchange = async code => {
 const authFlow = async onExchange => {
   const search = qs.parse(window.location.search);
   if (search.code) {
-    console.log('request access token');
-    console.log(search);
-    window.history.replaceState({}, document.title, '/');
-    const token = await exchange(search.code);
-    console.log(token);
-    onExchange(token);
+    try {
+      window.history.replaceState({}, document.title, '/');
+      const token = await exchange(search.code);
+      onExchange(token);
+    } catch (error) {
+      onExchange(null, error)
+    }
+
   }
 };
 

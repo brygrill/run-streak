@@ -27,22 +27,67 @@ const refresh = async session => {
 };
 
 const App = () => {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState({
+    token: null,
+    loading: true,
+    error: null,
+  });
+
+  const onExchange = (session, error) => {
+    if (error) {
+      localStorage.removeItem(SESSION);
+      setSession({
+        token: null,
+        loading: false,
+        error,
+      });
+      return;
+    }
+    localStorage.setItem(SESSION, JSON.stringify(session));
+    setSession({
+      token: session,
+      loading: false,
+      error: null,
+    });
+  };
 
   useEffect(async () => {
-    console.log('USE EFFECT!')
     const local = readLocal();
     if (local) {
-      console.log(local);
-      const session = await refresh(local)
-      setSession(session);
+      try {
+        const session = await refresh(local);
+        onExchange(session);
+      } catch (error) {
+        onExchange(null, error);
+      }
+      return;
     }
+    setSession({
+      token: null,
+      loading: false,
+      error: null,
+    });
   }, []);
 
-  const onExchange = session => {
-    localStorage.setItem(SESSION, JSON.stringify(session));
-    setSession(session);
-  };
+  if (session.loading) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <div>Loading...</div>
+        </header>
+      </div>
+    );
+  }
+
+  if (session.error) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <div>Error...</div>
+        </header>
+      </div>
+    );
+  }
 
   return (
     <div className="App">
