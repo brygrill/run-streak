@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Count from './Count';
+import { extractDates, streakLength } from './calc';
 
 const fetchActivities = async token => {
   const activities = await axios.get(
@@ -9,7 +10,7 @@ const fetchActivities = async token => {
     {
       headers: { Authorization: `Bearer ${token}` },
       params: {
-        per_page: 200,
+        per_page: 50,
       },
     },
   );
@@ -25,9 +26,10 @@ const Streak = ({ token }) => {
 
   useEffect(async () => {
     try {
-      const count = await fetchActivities(token.access_token);
-      console.log(count);
-      setCount({ count: 5, loading: false, error: null });
+      const activities = await fetchActivities(token.access_token);
+      const dates = extractDates(activities);
+      const count = streakLength(dates);
+      setCount({ count, loading: false, error: null });
     } catch (error) {
       setCount({ count: 0, loading: false, error });
     }
