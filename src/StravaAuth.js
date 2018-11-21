@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import qs from 'qs';
 import axios from 'axios';
 import stravaBtn from './strava.svg';
@@ -22,24 +22,38 @@ const exchange = async code => {
   return token.data;
 };
 
-const authFlow = async onExchange => {
+const authFlow = async (setLoading, onExchange) => {
   const search = qs.parse(window.location.search);
   if (search.code) {
     try {
+      setLoading(true);
       window.history.replaceState({}, document.title, '/');
       const token = await exchange(search.code);
       onExchange(token);
     } catch (error) {
-      onExchange(null, error)
+      onExchange(null, error);
     }
-
+  } else {
+    setLoading(false);
   }
 };
 
 const StravaConnect = ({ onExchange }) => {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    authFlow(onExchange);
-  });
+    authFlow(setLoading, onExchange);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <div>Loading...</div>
+        </header>
+      </div>
+    );
+  }
 
   return (
     <a href={href}>

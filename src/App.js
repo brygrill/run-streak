@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import StravaAuth from './StravaAuth';
+import Streak from './Streak';
+
 import './App.css';
 
 const SESSION = '__STRAVA__SESSION__';
@@ -92,7 +94,7 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        {session ? <div>Streak</div> : <StravaAuth onExchange={onExchange} />}
+        {session.token ? <Streak token={session.token} /> : <StravaAuth onExchange={onExchange} />}
       </header>
     </div>
   );
