@@ -11,9 +11,14 @@ const subtractDay = day => {
 
 export const extractDates = activities => {
   console.log(activities);
-  return _.map(activities, a => {
-    return moment(a.start_date_local).format(dateFormat);
+  const filtered = _.filter(activities, a => {
+    return a.type === 'Run'
   });
+
+  console.log(filtered)
+  return _.map(filtered, f => {
+    return moment(f.start_date_local).format(dateFormat);
+  })
 };
 
 // start at today and work backwards until we find a day that isnt included
@@ -32,5 +37,6 @@ export const streakLength = streak => {
     }
   }
 
+  // TODO: if streak greater than per_page, request next page
   return dayCount;
 };

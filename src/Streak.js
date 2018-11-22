@@ -11,6 +11,7 @@ const fetchActivities = async token => {
       headers: { Authorization: `Bearer ${token}` },
       params: {
         per_page: 50,
+        page: 1
       },
     },
   );
