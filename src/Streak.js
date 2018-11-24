@@ -4,14 +4,16 @@ import axios from 'axios';
 import Count from './Count';
 import { extractDates, streakLength } from './calc';
 
-const fetchActivities = async token => {
+const PERPAGE = 50;
+
+const fetchActivities = async (token, per_page) => {
   const activities = await axios.get(
     'https://www.strava.com/api/v3/athlete/activities',
     {
       headers: { Authorization: `Bearer ${token}` },
       params: {
-        per_page: 50,
-        page: 1
+        per_page,
+        page: 1,
       },
     },
   );
@@ -27,10 +29,11 @@ const Streak = ({ token }) => {
 
   useEffect(async () => {
     try {
-      const activities = await fetchActivities(token.access_token);
+      const activities = await fetchActivities(token.access_token, PERPAGE);
       const dates = extractDates(activities);
-      const count = streakLength(dates);
-      setCount({ count, loading: false, error: null });
+      const count = streakLength(dates, PERPAGE);
+      console.log(count);
+      setCount({ count: count.count, loading: false, error: null });
     } catch (error) {
       setCount({ count: 0, loading: false, error });
     }
