@@ -10,18 +10,20 @@ const subtractDay = day => {
 };
 
 export const extractDates = activities => {
+  console.log(activities);
   const filtered = _.filter(activities, a => {
     return a.type === 'Run' && a.distance >= 1609.34;
   });
 
   return _.map(filtered, f => {
     return moment(f.start_date_local).format(dateFormat);
-  })
+  });
 };
 
 // start at today and work backwards until we find a day that isnt included
 // for start_date today do not break the streak, but dont accumulate either
-export const streakLength = (streak, perPage) => {
+export const streakLength = (streak, activityCount) => {
+  console.log(streak);
   let dayCount = 0;
   let ranToday = true;
   let start_date = moment().format(dateFormat);
@@ -37,6 +39,8 @@ export const streakLength = (streak, perPage) => {
     }
   }
 
-  // TODO: if streak greater than per_page, request next page
-  return {count: dayCount, nextPg: dayCount === perPage, ranToday };
+  console.log(dayCount);
+  console.log(activityCount);
+
+  return { count: dayCount, nextPg: dayCount === activityCount, ranToday };
 };
