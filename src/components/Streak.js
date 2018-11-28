@@ -3,7 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import Count from './Count';
-import { streakLength } from './calc';
+import { streakLength } from '../utils/calc';
 
 const PERPAGE = 5;
 

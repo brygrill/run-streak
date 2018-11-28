@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import qs from 'qs';
 import axios from 'axios';
-import stravaBtn from './strava.svg';
+import stravaBtn from '../assets/strava.svg';
 const href = `https://www.strava.com/oauth/authorize?client_id=${
   process.env.REACT_APP_ID
 }&response_type=code&redirect_uri=http://localhost:3000&approval_prompt=auto&scope=activity:read_all`;
