@@ -9,26 +9,28 @@ const subtractDay = day => {
     .format(dateFormat);
 };
 
-export const extractDates = activities => {
-  console.log(activities);
-  const filtered = _.filter(activities, a => {
-    return a.type === 'Run' && a.distance >= 1609.34;
-  });
-
-  return _.map(filtered, f => {
-    return moment(f.start_date_local).format(dateFormat);
-  });
+// get Run activites over 1 mile and return formatted date
+export const extractRunDates = activities => {
+  return _.chain(activities)
+    .filter(a => {
+      return a.type === 'Run' && a.distance >= 1609.34;
+    })
+    .map(f => {
+      return moment(f.start_date_local).format(dateFormat);
+    })
+    .uniq()
+    .value();
 };
 
 // start at today and work backwards until we find a day that isnt included
 // for start_date today do not break the streak, but dont accumulate either
-export const streakLength = (streak, activityCount) => {
-  console.log(streak);
+export const streakLength = activities => {
+  const streakDates = extractRunDates(activities);
   let dayCount = 0;
   let ranToday = true;
   let start_date = moment().format(dateFormat);
   while (true) {
-    if (_.includes(streak, start_date)) {
+    if (_.includes(streakDates, start_date)) {
       dayCount += 1;
       start_date = subtractDay(start_date);
     } else if (moment(start_date).isSame(moment(), 'day')) {
@@ -39,8 +41,5 @@ export const streakLength = (streak, activityCount) => {
     }
   }
 
-  console.log(dayCount);
-  console.log(activityCount);
-
-  return { count: dayCount, nextPg: dayCount === activityCount, ranToday };
+  return { count: dayCount, nextPg: dayCount === streakDates.length, ranToday };
 };

@@ -3,7 +3,7 @@ import axios from 'axios';
 import _ from 'lodash';
 
 import Count from './Count';
-import { extractDates, streakLength } from './calc';
+import { streakLength } from './calc';
 
 const PERPAGE = 5;
 
@@ -29,21 +29,24 @@ const Streak = ({ token }) => {
   });
 
   const allActivities = async () => {
-    let results = [];
-    let nextStart = 1;
-    let streak = null;
-    do {
-      const activities = await fetchActivities(
-        token.access_token,
-        PERPAGE,
-        nextStart,
-      );
-      results = _.concat(results, activities);
-      const dates = extractDates(results);
-      streak = streakLength(dates, results.length);
-      nextStart += 1;
-    } while (streak.nextPg);
-    return streak;
+    try {
+      let results = [];
+      let nextStart = 1;
+      let streak = null;
+      do {
+        const activities = await fetchActivities(
+          token.access_token,
+          PERPAGE,
+          nextStart,
+        );
+        results = _.concat(results, activities);
+        streak = streakLength(results);
+        nextStart += 1;
+      } while (streak.nextPg);
+      return streak;
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   useEffect(async () => {
@@ -52,7 +55,7 @@ const Streak = ({ token }) => {
       console.log(streakCount);
       setCount({ count: streakCount.count, loading: false, error: null });
     } catch (error) {
-      console.error(error)
+      console.error(error);
       setCount({ count: 0, loading: false, error });
     }
   }, []);
