@@ -11,8 +11,14 @@ import { streakLength } from '../utils/calc';
 
 const PERPAGE = 5;
 
-const Img = styled.img`
- height: 2.5rem;
+const ImgFooter = styled.img`
+  height: 2.5rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
 `
 const Streak = ({ token }) => {
   const [count, setCount] = useState({
@@ -64,7 +70,7 @@ const Streak = ({ token }) => {
   return (
     <div>
       <Count count={count.count} />
-      <Img alt="powered by" src={poweredby} />
+      <ImgFooter alt="powered by" src={poweredby} />
     </div>
   );
 };
