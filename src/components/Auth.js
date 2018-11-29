@@ -3,7 +3,7 @@ import qs from 'qs';
 
 import { fetchExchange } from '../utils/fetch';
 
-import stravaBtn from '../assets/strava.svg';
+import connect from '../assets/connect.svg';
 
 const href = `https://www.strava.com/oauth/authorize?client_id=${
   process.env.REACT_APP_ID
@@ -45,7 +45,7 @@ const StravaConnect = ({ onExchange }) => {
 
   return (
     <a href={href}>
-      <img alt="strava oauth" src={stravaBtn} />
+      <img alt="strava oauth" src={connect} />
     </a>
   );
 };

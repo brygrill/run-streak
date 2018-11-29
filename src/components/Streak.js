@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import _ from 'lodash';
 
 import Count from './Count';
+
+import poweredby from '../assets/poweredby.svg';
 
 import { fetchActivities } from '../utils/fetch';
 import { streakLength } from '../utils/calc';
 
 const PERPAGE = 5;
 
+const Img = styled.img`
+ height: 2.5rem;
+`
 const Streak = ({ token }) => {
   const [count, setCount] = useState({
     count: 0,
@@ -55,7 +61,12 @@ const Streak = ({ token }) => {
     return <div>Error...</div>;
   }
 
-  return <Count count={count.count} />;
+  return (
+    <div>
+      <Count count={count.count} />
+      <Img alt="powered by" src={poweredby} />
+    </div>
+  );
 };
 
 export default Streak;
