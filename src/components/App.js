@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import StravaAuth from './StravaAuth';
+import styled from 'styled-components';
+
+import Loading from './Loading';
+import StravaAuth from './Auth';
 import Streak from './Streak';
 
-import './App.css';
+import { fetchRefresh } from '../utils/fetch';
 
 const SESSION = '__STRAVA__SESSION__';
 
@@ -12,21 +14,17 @@ const readLocal = () => {
   return JSON.parse(local);
 };
 
-const refresh = async session => {
-  const token = await axios.post(
-    'https://www.strava.com/oauth/token',
-    {},
-    {
-      params: {
-        refresh_token: session.refresh_token,
-        client_id: process.env.REACT_APP_ID,
-        client_secret: process.env.REACT_APP_SECRET,
-        grant_type: 'refresh_token',
-      },
-    },
-  );
-  return token.data;
-};
+const Header = styled.div`
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+`;
 
 const App = () => {
   const [session, setSession] = useState({
@@ -57,7 +55,7 @@ const App = () => {
     const local = readLocal();
     if (local) {
       try {
-        const session = await refresh(local);
+        const session = await fetchRefresh(local);
         onExchange(session);
       } catch (error) {
         onExchange(null, error);
@@ -73,30 +71,28 @@ const App = () => {
 
   if (session.loading) {
     return (
-      <div className="App">
-        <header className="App-header">
-          <div>Loading...</div>
-        </header>
-      </div>
+      <Header>
+        <Loading />
+      </Header>
     );
   }
 
   if (session.error) {
     return (
-      <div className="App">
-        <header className="App-header">
-          <div>Error...</div>
-        </header>
-      </div>
+      <Header>
+        <div>Error fetching Strava data...</div>
+      </Header>
     );
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {session.token ? <Streak token={session.token} /> : <StravaAuth onExchange={onExchange} />}
-      </header>
-    </div>
+    <Header>
+      {session.token ? (
+        <Streak token={session.token} />
+      ) : (
+        <StravaAuth onExchange={onExchange} />
+      )}
+    </Header>
   );
 };
 
