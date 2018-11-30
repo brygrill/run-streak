@@ -10,8 +10,12 @@ import { fetchRefresh } from '../utils/fetch';
 const SESSION = '__STRAVA__SESSION__';
 
 const readLocal = () => {
-  const local = localStorage.getItem(SESSION);
-  return JSON.parse(local);
+  try {
+    const local = localStorage.getItem(SESSION);
+    return JSON.parse(local);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const Header = styled.div`
@@ -35,12 +39,7 @@ const App = () => {
 
   const onExchange = (session, error) => {
     if (error) {
-      localStorage.removeItem(SESSION);
-      setSession({
-        token: null,
-        loading: false,
-        error,
-      });
+      onError(error);
       return;
     }
     localStorage.setItem(SESSION, JSON.stringify(session));
@@ -51,22 +50,45 @@ const App = () => {
     });
   };
 
-  useEffect(async () => {
-    const local = readLocal();
-    if (local) {
-      try {
-        const session = await fetchRefresh(local);
-        onExchange(session);
-      } catch (error) {
-        onExchange(null, error);
-      }
-      return;
-    }
+  const onError = error => {
+    localStorage.removeItem(SESSION);
     setSession({
       token: null,
       loading: false,
-      error: null,
+      error,
     });
+    // clear error and show strava btn
+    setTimeout(() => {
+      setSession({
+        token: null,
+        loading: false,
+        error: null,
+      });
+    }, 5000);
+  };
+
+  useEffect(async () => {
+    try {
+      const local = readLocal();
+      if (local) {
+        try {
+          const session = await fetchRefresh(local);
+          onExchange(session);
+        } catch (error) {
+          console.error(error);
+          onExchange(null, error);
+        }
+        return;
+      }
+      setSession({
+        token: null,
+        loading: false,
+        error: null,
+      });
+    } catch (error) {
+      console.error(error);
+      onError(error);
+    }
   }, []);
 
   if (session.loading) {
