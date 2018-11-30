@@ -1,11 +1,17 @@
 const axios = require('axios');
 
-const fetchRefresh = async params => {
+const fetchRefresh = async (code, token, grant) => {
   const refresh = await axios.post(
     'https://www.strava.com/oauth/token',
     {},
     {
-      params: params,
+      params: {
+        code: code,
+        refresh_token: token,
+        client_id: process.env.ID,
+        client_secret: process.env.SECRET,
+        grant_type: grant,
+      }
     },
   );
   return refresh.data;
@@ -13,22 +19,8 @@ const fetchRefresh = async params => {
 
 exports.handler = async event => {
   const body = JSON.parse(event.body);
-  const params =
-    body.grant_type === 'refresh_token'
-      ? {
-          refresh_token: body.token,
-          client_id: process.env.ID,
-          client_secret: process.env.SECRET,
-          grant_type: body.grant_type,
-        }
-      : {
-          code: body.code,
-          client_id: process.env.ID,
-          client_secret: process.env.SECRET,
-          grant_type: body.grant_type,
-        };
   try {
-    const data = await fetchRefresh(params);
+    const data = await fetchRefresh(body.code, body.token, body.grant);
     const response = {
       statusCode: 200,
       headers: {

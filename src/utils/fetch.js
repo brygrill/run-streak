@@ -15,7 +15,7 @@ export const fetchRefresh = async session => {
   if (_.has(session, 'refresh_token')) {
     const token = await axios.post(
       'https://0fta34xlng.execute-api.us-east-1.amazonaws.com/default',
-      { token: session.refresh_token, code: null, grant_type: 'refresh_token' },
+      { token: session.refresh_token, code: null, grant: 'refresh_token' },
     );
     return token.data;
   }
@@ -25,7 +25,7 @@ export const fetchRefresh = async session => {
 export const fetchExchange = async code => {
   const token = await axios.post(
     'https://0fta34xlng.execute-api.us-east-1.amazonaws.com/default',
-    { token: null, code, grant_type: 'authorization_code' },
+    { token: null, code, grant: 'authorization_code' },
   );
   return token.data;
 };
