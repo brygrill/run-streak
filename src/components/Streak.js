@@ -9,7 +9,7 @@ import poweredby from '../assets/poweredby.svg';
 import { fetchActivities } from '../utils/fetch';
 import { streakLength } from '../utils/calc';
 
-const PERPAGE = 5;
+const PERPAGE = 100;
 
 const ImgFooter = styled.img`
   height: 2.5rem;
