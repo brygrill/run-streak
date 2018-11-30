@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "scripts": {
+    "setup": "node-lambda setup",
+    "test": "node-lambda run",
+    "package": "node-lambda package",
+    "deploy": "bash ./deploy-lambda.sh",
+    "package:deploy": "yarn package && yarn deploy"
+  }
+}

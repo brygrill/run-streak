@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const fetchRefresh = async session => {
+export const fetchRefresh1 = async session => {
   const token = await axios.post(
     'https://www.strava.com/oauth/token',
     {},
@@ -13,6 +13,16 @@ export const fetchRefresh = async session => {
       },
     },
   );
+  return token.data;
+};
+
+export const fetchRefresh = async session => {
+  console.log('fetch refresh');
+  const token = await axios.post(
+    'https://0fta34xlng.execute-api.us-east-1.amazonaws.com/default',
+    { token: session.refresh_token },
+  );
+  console.log(token);
   return token.data;
 };
 
