@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const fetchRefresh = async token => {
+  console.log(token);
   const refresh = await axios.post(
     'https://www.strava.com/oauth/token',
     {},
@@ -17,8 +18,9 @@ const fetchRefresh = async token => {
 };
 
 exports.handler = async event => {
+  const token = JSON.parse(event.body).token;
   try {
-    const data = fetchRefresh(event.body.token);
+    const data = await fetchRefresh(token);
     const response = {
       statusCode: 200,
       headers: {
@@ -29,6 +31,7 @@ exports.handler = async event => {
     };
     return response;
   } catch (error) {
+    console.error(error);
     const response = {
       statusCode: 401,
       headers: {
