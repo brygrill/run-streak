@@ -1,11 +1,21 @@
 import axios from 'axios';
 import _ from 'lodash';
 
+export const connectURL = () => {
+  const id = process.env.REACT_APP_ID;
+  const redirect =
+    process.env.NODE_ENV === 'production'
+      ? 'https://strk.run'
+      : 'http://localhost:3000';
+  const href = `https://www.strava.com/oauth/authorize?client_id=${id}&response_type=code&redirect_uri=${redirect}&approval_prompt=auto&scope=activity:read_all`;
+  return href;
+};
+
 export const fetchRefresh = async session => {
   if (_.has(session, 'refresh_token')) {
     const token = await axios.post(
       'https://0fta34xlng.execute-api.us-east-1.amazonaws.com/default',
-      { token: session.refresh_token },
+      { token: session.refresh_token, code: null, grant_type: 'refresh_token' },
     );
     return token.data;
   }
@@ -14,16 +24,8 @@ export const fetchRefresh = async session => {
 
 export const fetchExchange = async code => {
   const token = await axios.post(
-    'https://www.strava.com/oauth/token',
-    {},
-    {
-      params: {
-        code,
-        client_id: process.env.REACT_APP_ID,
-        client_secret: process.env.REACT_APP_SECRET,
-        grant_type: 'authorization_code',
-      },
-    },
+    'https://0fta34xlng.execute-api.us-east-1.amazonaws.com/default',
+    { token: null, code, grant_type: 'authorization_code' },
   );
   return token.data;
 };

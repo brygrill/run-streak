@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import qs from 'qs';
 
-import { fetchExchange } from '../utils/fetch';
+import { fetchExchange, connectURL } from '../utils/fetch';
 
 import connect from '../assets/connect.svg';
-
-const href = `https://www.strava.com/oauth/authorize?client_id=${
-  process.env.REACT_APP_ID
-}&response_type=code&redirect_uri=http://localhost:3000&approval_prompt=auto&scope=activity:read_all`;
-
 
 const authFlow = async (setLoading, onExchange) => {
   const search = qs.parse(window.location.search);
@@ -44,7 +39,7 @@ const StravaConnect = ({ onExchange }) => {
   }
 
   return (
-    <a href={href}>
+    <a href={connectURL()}>
       <img alt="strava oauth" src={connect} />
     </a>
   );
