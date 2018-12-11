@@ -16,7 +16,7 @@ export const extractRunDates = activities => {
       return a.type === 'Run' && a.distance >= 1609.34;
     })
     .map(f => {
-      return moment(f.start_date_local).format(dateFormat);
+      return moment(f.start_date).format(dateFormat);
     })
     .uniq()
     .value();
