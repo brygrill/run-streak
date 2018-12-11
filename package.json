@@ -19,9 +19,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "invalidate": "bash ./aws/invalidate.sh",
     "sync": "aws s3 sync build s3://strk.run --delete",
-    "deploy": "yarn build && yarn invalidate && yarn sync"
+    "invalidate": "bash ./aws/invalidate.sh",
+    "deploy": "yarn build && yarn sync && yarn invalidate"
   },
   "eslintConfig": {
     "extends": "react-app"
