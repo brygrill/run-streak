@@ -19,7 +19,7 @@ const ImgFooter = styled.img`
   right: 0;
   margin-right: auto;
   margin-left: auto;
-`
+`;
 const Streak = ({ token }) => {
   const [count, setCount] = useState({
     count: 0,
@@ -48,7 +48,7 @@ const Streak = ({ token }) => {
     }
   };
 
-  useEffect(async () => {
+  const onMount = async () => {
     try {
       const streakCount = await allActivities();
       console.log(streakCount);
@@ -57,6 +57,10 @@ const Streak = ({ token }) => {
       console.error(error);
       setCount({ count: 0, loading: false, error });
     }
+  };
+
+  useEffect(() => {
+    onMount();
   }, []);
 
   if (count.loading) {

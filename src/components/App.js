@@ -67,7 +67,7 @@ const App = () => {
     }, 5000);
   };
 
-  useEffect(async () => {
+  const onMount = async () => {
     try {
       const local = readLocal();
       if (local) {
@@ -89,6 +89,10 @@ const App = () => {
       console.error(error);
       onError(error);
     }
+  };
+
+  useEffect(() => {
+    onMount();
   }, []);
 
   if (session.loading) {
